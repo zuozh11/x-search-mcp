@@ -41,6 +41,7 @@ test('host receives joint-search guidance and requests only xAI X search with co
   assert.match(client.getInstructions(), /Web-only/);
   assert.equal(request.path, '/v1/responses');
   assert.equal(request.body.model, 'fixture-model');
+  assert.deepEqual(request.body.reasoning, { effort: 'low' });
   assert.deepEqual(request.body.tools, [{ type: 'x_search', allowed_x_handles: ['example'], from_date: '2026-09-01', to_date: '2026-09-05' }]);
   const format = request.body.text.format;
   assert.equal(format.name, 'x_search_answer');

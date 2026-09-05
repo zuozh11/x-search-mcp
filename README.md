@@ -25,7 +25,7 @@
 需要 Node.js（建议 22 或 24）及 `XAI_API_KEY` 环境变量。发布包为 [`@zz1996/x-search-mcp`](https://www.npmjs.com/package/@zz1996/x-search-mcp)。
 
 ```bash
-codex mcp add x-search -- npx -y @zz1996/x-search-mcp@0.2.1
+codex mcp add x-search -- npx -y @zz1996/x-search-mcp@0.2.2
 ```
 
 npx 从 npm 下载并缓存发布包，无须克隆仓库或本地编译。固定版本用于明确本地运行内容；升级时修改版本号并重新加载 MCP。
@@ -35,13 +35,13 @@ npx 从 npm 下载并缓存发布包，无须克隆仓库或本地编译。固�
 ```toml
 [mcp_servers.x-search]
 command = "npx"
-args = ["-y", "@zz1996/x-search-mcp@0.2.1"]
+args = ["-y", "@zz1996/x-search-mcp@0.2.2"]
 env_vars = ["XAI_API_KEY"]
 tool_timeout_sec = 185
 
 [mcp_servers.x-search.env]
 XAI_BASE_URL = "https://api.x.ai/v1"
-XAI_MODEL = "grok-4-1-fast"
+XAI_MODEL = "grok-4.5"
 XAI_TIMEOUT = "180000"
 ```
 
@@ -73,7 +73,9 @@ XAI_TIMEOUT = "180000"
 - `inline_citations`：保留所有文本块的 URL、标题。JSON 解码与文本拼接后原始偏移失效，因此首版返回 `null`，不提供错误位置。
 - `raw_response`：仅按需返回原始 API 响应；API 不保证提供全部原始帖子。
 
-环境变量默认值沿用上游：`XAI_BASE_URL=https://api.x.ai/v1`、`XAI_MODEL=grok-4-1-fast`、`XAI_TIMEOUT=30000`（毫秒）。本地示例显式延长等待时间；宿主工具超时需大于 HTTP 超时。
+搜索请求固定使用 `reasoning.effort: "low"`，降低思考开销；默认模型为 `grok-4.5`。
+
+环境变量默认值：`XAI_BASE_URL=https://api.x.ai/v1`、`XAI_MODEL=grok-4.5`、`XAI_TIMEOUT=30000`（毫秒）。本地示例显式延长等待时间；宿主工具超时需大于 HTTP 超时。
 
 ## 验证
 
@@ -99,8 +101,8 @@ npm run check
 
 ```bash
 git push origin main
-git tag v0.2.1
-git push origin v0.2.1
+git tag v0.2.2
+git push origin v0.2.2
 ```
 
 发布成功后，从 npm 读取版本，再通过 `npx -y @zz1996/x-search-mcp@<version>` 启动并验证 MCP。更新 Codex 的固定版本即可升级。

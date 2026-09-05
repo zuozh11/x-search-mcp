@@ -27,7 +27,7 @@ type ResponseOutput = {
 };
 
 const DATE_REGEX = /^\d{4}-\d{2}-\d{2}$/;
-const DEFAULT_MODEL = "grok-4-1-fast";
+const DEFAULT_MODEL = "grok-4.5";
 
 const XSearchInputBaseSchema = z.object({
     query: z.string().min(1).max(2000).describe("Search query for X"),
@@ -279,6 +279,7 @@ server.registerTool(
 
       const body = {
         model,
+        reasoning: { effort: "low" },
         input: [
           {
             role: "system",
