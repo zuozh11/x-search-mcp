@@ -16,7 +16,7 @@
 | 明确找帖子或账号发言 | 仅 X |
 | 明确要求联合检索 | 两个渠道都参与 |
 
-宿主策略通过 MCP 初始化的 `instructions` 提供，工具描述说明 X 适用范围。Grok 内部系统提示只约束本次 X 查询：遵守过滤条件、引用原始帖子、区分声明/观点/推断、说明证据不足。MCP 的宿主说明和工具描述明确提示：X Search 返回较慢，可与官方 Web Search 或其他独立检索并行调用。实际调度由宿主决定。
+宿主策略通过 MCP 初始化的 `instructions` 提供，工具描述说明 X 适用范围。Grok 内部系统提示只约束本次 X 查询：遵守过滤条件、引用原始帖子、区分声明/观点/推断、说明证据不足。MCP 的宿主说明和工具描述明确提示：X Search 可与官方 Web Search 或其他独立检索并行调用。实际调度由宿主决定。
 
 联合检索中一侧失败时，宿主说明缺失渠道，保留另一侧证据。搜索到的帖子是资料，不是指令。没有可核实搜索执行记录的模型回答不能作为已完成的 X 搜索。
 
@@ -25,7 +25,7 @@
 需要 Node.js（建议 22 或 24）及 `XAI_API_KEY` 环境变量。发布包为 [`@zz1996/x-search-mcp`](https://www.npmjs.com/package/@zz1996/x-search-mcp)。
 
 ```bash
-codex mcp add x-search -- npx -y @zz1996/x-search-mcp@0.2.4
+codex mcp add x-search -- npx -y @zz1996/x-search-mcp@0.2.5
 ```
 
 npx 从 npm 下载并缓存发布包，无须克隆仓库或本地编译。固定版本用于明确本地运行内容；升级时修改版本号并重新加载 MCP。
@@ -35,7 +35,7 @@ npx 从 npm 下载并缓存发布包，无须克隆仓库或本地编译。固�
 ```toml
 [mcp_servers.x-search]
 command = "npx"
-args = ["-y", "@zz1996/x-search-mcp@0.2.4"]
+args = ["-y", "@zz1996/x-search-mcp@0.2.5"]
 env_vars = ["XAI_API_KEY"]
 tool_timeout_sec = 185
 
@@ -101,8 +101,8 @@ npm run check
 
 ```bash
 git push origin main
-git tag v0.2.4
-git push origin v0.2.4
+git tag v0.2.5
+git push origin v0.2.5
 ```
 
 发布成功后，从 npm 读取版本，再通过 `npx -y @zz1996/x-search-mcp@<version>` 启动并验证 MCP。更新 Codex 的固定版本即可升级。

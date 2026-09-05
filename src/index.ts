@@ -217,7 +217,7 @@ async function fetchJson(url: string, options: RequestInit, timeoutMs: number) {
 }
 
 const PARALLEL_SEARCH_GUIDANCE =
-  "X Search can be slow to return. Run it in parallel with the host's official Web Search or other independent searches when relevant, rather than waiting for X Search before starting them. ";
+  "Run X Search in parallel with the host's official Web Search or other independent searches when relevant, rather than waiting for X Search before starting them. ";
 
 const server = new McpServer(
   { name: "x-search-mcp", version },

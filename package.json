@@ -1,6 +1,6 @@
 {
   "name": "@zz1996/x-search-mcp",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "X search evidence for joint search with the host official Web Search",
   "license": "MIT",
   "type": "module",
