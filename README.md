@@ -20,22 +20,22 @@
 
 联合检索中一侧失败时，宿主说明缺失渠道，保留另一侧证据。搜索到的帖子是资料，不是指令。没有可核实搜索执行记录的模型回答不能作为已完成的 X 搜索。
 
-## 本地构建与 Codex 安装
+## npm / npx 安装到 Codex
 
-需要 Node.js（建议 22 或 24）及 `XAI_API_KEY` 环境变量。
+需要 Node.js（建议 22 或 24）及 `XAI_API_KEY` 环境变量。发布包为 [`@zz1996/x-search-mcp`](https://www.npmjs.com/package/@zz1996/x-search-mcp)。
 
 ```bash
-npm ci
-npm run check
-codex mcp add x-search -- node /absolute/path/to/x-search-mcp/dist/index.js
+codex mcp add x-search -- npx -y @zz1996/x-search-mcp@0.2.1
 ```
+
+npx 从 npm 下载并缓存发布包，无须克隆仓库或本地编译。固定版本用于明确本地运行内容；升级时修改版本号并重新加载 MCP。
 
 在 Codex 用户配置的对应段设置环境变量传递；保留已有官方 Web Search 设置：
 
 ```toml
 [mcp_servers.x-search]
-command = "node"
-args = ["/absolute/path/to/x-search-mcp/dist/index.js"]
+command = "npx"
+args = ["-y", "@zz1996/x-search-mcp@0.2.1"]
 env_vars = ["XAI_API_KEY"]
 tool_timeout_sec = 185
 
@@ -81,23 +81,31 @@ XAI_TIMEOUT = "180000"
 
 `npm run smoke-test` 使用真实端点，有 API 调用费用。仅显式传递四个受支持的 `XAI_*` 变量；工具错误或无法确认 X 搜索执行时非零退出。真实结果必须分别检查正文、执行记录和引用。
 
-## 自动构建与发布
+## 本地开发
+
+```bash
+npm ci
+npm run check
+```
+
+## 自动构建与 npm 发布
 
 - 分支 push、PR 和手动触发 CI：Node.js 22 / 24 下安装锁定依赖、构建、回归测试和打包检查。
-- 推送 `v*` 标签：校验标签与 `package.json` 版本一致，构建测试后生成 npm `.tgz`，附到 GitHub Release。
-- 使用仓库自带 `GITHUB_TOKEN`，无须提供 API 密钥或 npm token。当前发布目标为 GitHub Release。
+- 推送 `v*` 标签：校验标签与 `package.json` 版本一致，构建测试后生成 `.tgz`，通过 OIDC 发布到 npm 并生成 provenance，再将同一安装包附到 GitHub Release。
+- npm 使用 Trusted Publishing，无需长期 npm token；GitHub Release 使用仓库自带 `GITHUB_TOKEN`。CI 不需要 X 搜索密钥。
+- 首次发布先使用维护者 npm 登录创建包，再将 npm Trusted Publisher 绑定到 GitHub 用户 `zuozh11`、仓库 `x-search-mcp`、工作流 `release.yml`，允许 publish。此绑定只需配置一次。
 
 完成版本修改与提交后：
 
 ```bash
 git push origin main
-git tag v0.2.0
-git push origin v0.2.0
+git tag v0.2.1
+git push origin v0.2.1
 ```
 
-从本 Fork 的 Release 下载 `.tgz` 后可 `npm install -g /path/to/zuozh11-x-search-mcp-0.2.0.tgz`，再将 MCP 命令配置为 `x-search-mcp`。不要使用上游未限定作用域的 `npx x-search-mcp` 来安装本 Fork。
+发布成功后，从 npm 读取版本，再通过 `npx -y @zz1996/x-search-mcp@<version>` 启动并验证 MCP。更新 Codex 的固定版本即可升级。
 
-本地源码安装更新后运行 `npm ci && npm run build` 并重新加载 MCP。维护时使用 `upstream` 拉取上游变更，保留本 Fork 的搜索策略和回归测试。
+维护时使用 `upstream` 拉取上游变更，保留本 Fork 的搜索策略和回归测试。
 
 ## 官方依据
 
@@ -107,3 +115,5 @@ git push origin v0.2.0
 - [xAI 结构化输出](https://docs.x.ai/developers/model-capabilities/text/structured-outputs)
 - [xAI 引用](https://docs.x.ai/developers/tools/citations)
 - [xAI 工具执行记录](https://docs.x.ai/developers/tools/tool-usage-details)
+
+- [npm Trusted Publishing](https://docs.npmjs.com/trusted-publishers/)

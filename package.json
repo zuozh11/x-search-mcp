@@ -1,6 +1,6 @@
 {
-  "name": "@zuozh11/x-search-mcp",
-  "version": "0.2.0",
+  "name": "@zz1996/x-search-mcp",
+  "version": "0.2.1",
   "description": "X search evidence for joint search with the host official Web Search",
   "license": "MIT",
   "type": "module",
@@ -47,5 +47,9 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
   }
 }
