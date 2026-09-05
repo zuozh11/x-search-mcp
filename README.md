@@ -6,7 +6,7 @@
 
 ## 搜索如何协作
 
-宿主负责选择渠道、交叉核验和最终回答，MCP 只处理已经选择的 X 查询。
+宿主负责选择渠道、交叉核验和最终回答，MCP 只处理已经选择的 X 查询。每次 MCP 调用仅发送一次 Responses 请求，不续接历史；Grok 只开放 `x_search`，并通过 `max_turns: 1` 限制为一轮内部工具调用。该轮可以包含多个 X 查询，随后返回证据摘要。
 
 | 查询 | 建议渠道 |
 | --- | --- |
@@ -25,7 +25,7 @@
 需要 Node.js（建议 22 或 24）及 `XAI_API_KEY` 环境变量。发布包为 [`@zz1996/x-search-mcp`](https://www.npmjs.com/package/@zz1996/x-search-mcp)。
 
 ```bash
-codex mcp add x-search -- npx -y @zz1996/x-search-mcp@0.2.2
+codex mcp add x-search -- npx -y @zz1996/x-search-mcp@0.2.3
 ```
 
 npx 从 npm 下载并缓存发布包，无须克隆仓库或本地编译。固定版本用于明确本地运行内容；升级时修改版本号并重新加载 MCP。
@@ -35,7 +35,7 @@ npx 从 npm 下载并缓存发布包，无须克隆仓库或本地编译。固�
 ```toml
 [mcp_servers.x-search]
 command = "npx"
-args = ["-y", "@zz1996/x-search-mcp@0.2.2"]
+args = ["-y", "@zz1996/x-search-mcp@0.2.3"]
 env_vars = ["XAI_API_KEY"]
 tool_timeout_sec = 185
 
@@ -101,8 +101,8 @@ npm run check
 
 ```bash
 git push origin main
-git tag v0.2.2
-git push origin v0.2.2
+git tag v0.2.3
+git push origin v0.2.3
 ```
 
 发布成功后，从 npm 读取版本，再通过 `npx -y @zz1996/x-search-mcp@<version>` 启动并验证 MCP。更新 Codex 的固定版本即可升级。

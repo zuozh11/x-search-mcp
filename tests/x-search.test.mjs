@@ -35,8 +35,12 @@ const search = (arguments_ = {}) => client.callTool({ name: 'x_search', argument
 
 test('host receives joint-search guidance and requests only xAI X search with correct schema', async () => {
   fixture = completed(message(text(JSON.stringify({ answer: 'result', citations: [] }))));
+  const beforeCount = requestCount;
   const result = await search({ allowed_x_handles: ['example'], from_date: '2026-09-01', to_date: '2026-09-05' });
   assert.equal(result.isError, false);
+  assert.equal(requestCount, beforeCount + 1);
+  assert.equal(request.body.max_turns, 1);
+  assert.equal(request.body.previous_response_id, undefined);
   assert.match(client.getInstructions(), /official Web Search/);
   assert.match(client.getInstructions(), /Web-only/);
   assert.equal(request.path, '/v1/responses');
