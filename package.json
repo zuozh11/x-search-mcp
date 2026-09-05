@@ -1,16 +1,16 @@
 {
-  "name": "x-search-mcp",
-  "version": "0.1.0",
-  "description": "MCP server for xAI X search via Responses API",
+  "name": "@zuozh11/x-search-mcp",
+  "version": "0.2.0",
+  "description": "X search evidence for joint search with the host official Web Search",
   "license": "MIT",
   "type": "module",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/konarkm/x-search-mcp.git"
+    "url": "git+https://github.com/zuozh11/x-search-mcp.git"
   },
-  "homepage": "https://github.com/konarkm/x-search-mcp#readme",
+  "homepage": "https://github.com/zuozh11/x-search-mcp#readme",
   "bugs": {
-    "url": "https://github.com/konarkm/x-search-mcp/issues"
+    "url": "https://github.com/zuozh11/x-search-mcp/issues"
   },
   "bin": {
     "x-search-mcp": "bin/x-search-mcp"
@@ -24,7 +24,10 @@
     "dev": "tsx src/index.ts",
     "prepublishOnly": "npm run build",
     "smoke-test": "tsx scripts/smoke-test.ts",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "test": "node --test tests/*.test.mjs",
+    "check": "npm run build && npm test",
+    "prepack": "npm run build"
   },
   "keywords": [
     "mcp",

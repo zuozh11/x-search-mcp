@@ -11,9 +11,12 @@ if (!apiKey) {
 const serverPath = path.resolve(process.cwd(), "dist/index.js");
 
 const transport = new StdioClientTransport({
-  command: "node",
+  command: process.execPath,
   args: [serverPath],
-  env: { XAI_API_KEY: apiKey },
+  env: Object.fromEntries(
+    ["XAI_API_KEY", "XAI_BASE_URL", "XAI_MODEL", "XAI_TIMEOUT"]
+      .flatMap((key) => process.env[key] === undefined ? [] : [[key, process.env[key]!]])
+  ),
 });
 
 const client = new Client({ name: "x-search-smoke", version: "0.0.1" });
@@ -29,12 +32,18 @@ try {
       query: "Summarize the latest post from @xai in one sentence.",
       allowed_x_handles: ["xai"],
     },
-  });
+  }, undefined, { timeout: Number.parseInt(process.env.XAI_TIMEOUT ?? "30000", 10) + 5000 });
 
   const content = result.content?.[0]?.text ?? "";
   console.log("tool result:", content);
-  await client.close();
+  if (result.isError) throw new Error("x_search returned an MCP error");
+  const payload = result.structuredContent as { status?: string; search_performed?: boolean } | undefined;
+  if (payload?.status !== "completed" || payload.search_performed !== true) {
+    throw new Error("X search execution was not verified");
+  }
 } catch (error) {
   console.error("smoke test failed", error);
-  process.exit(1);
+  process.exitCode = 1;
+} finally {
+  await client.close();
 }
